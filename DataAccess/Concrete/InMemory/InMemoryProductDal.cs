@@ -2,6 +2,7 @@
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DataAccess.Concrete.InMemory
@@ -28,7 +29,11 @@ namespace DataAccess.Concrete.InMemory
 
         public void Delete(Product product)
         {
-            _products.Remove(product);
+            Product productToDelete = null;
+            
+            productToDelete = _products.SingleOrDefault(p => p.ProductId == product.ProductId);
+           
+            _products.Remove(productToDelete);
         }
 
         public List<Product> GetAll()
@@ -36,8 +41,19 @@ namespace DataAccess.Concrete.InMemory
             return _products;
         }
 
+        public List<Product> GetAllByCategory(int categoryId)
+        {
+            return _products.Where(p => p.CategoryId == categoryId).ToList();
+        }
+
         public void UpDate(Product product)
         {
+
+            Product productToUpdate = _products.SingleOrDefault(p => p.ProductId == product.ProductId);
+            productToUpdate.ProductName = product.ProductName;
+            productToUpdate.CategoryId = product.CategoryId;
+            productToUpdate.UnitPrice = product.UnitPrice;
+            productToUpdate.UnitsInStock = product.UnitsInStock;
         }
     }
 }
